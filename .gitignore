@@ -11,29 +11,40 @@
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
 # Fortran module files
 *.mod
 *.smod
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Max Externals
+*.mxo
+*.mxe
+*.mxe64
 
 # Executables
 *.exe
 *.out
 *.app
 
+# Visual Studio Files
+.vs
+.tlog
+
+# Debug files
+*.pdb
+
 # macOS
 .DS_Store
 
-# Build directories
-Windows/build
-macOS/build
+# Allow certain .lib
+!Windows/lib/x64/*.lib 
+!Windows/lib/x86/*.lib 
