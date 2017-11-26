@@ -27,6 +27,9 @@
     <ClCompile Include="..\..\src\OpticalFlowTracker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\cycling74\source\c74support\max-includes\common\dllmain_win.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\jitOpenCV.h">

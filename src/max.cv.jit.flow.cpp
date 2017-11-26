@@ -46,7 +46,7 @@ void *max_cv_jit_flow_class;
 #ifdef __cplusplus
 extern "C"
 #endif
-int main(void)
+void ext_main(void *r)
 {	
 	void *p,*q;
 	
@@ -66,8 +66,6 @@ int main(void)
     max_jit_classex_standard_wrap(p,q,0); 	
 
     addmess((method)max_jit_mop_assist, "assist", A_CANT,0);	//Add outlet assistance to object
-	
-	return 0;
 }
 
 void max_cv_jit_flow_free(t_max_cv_jit_flow *x)
