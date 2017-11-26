@@ -18,7 +18,7 @@ OpticalFlowTracker::OpticalFlowTracker(){
 	windowSize = cvSize(10,10);
 	pyramidLevels = 3;
 	flags = 0;
-	minDistance = 0.01;
+	minDistance = 0.01f;
 	vectorCount = 0;
 	goodVectorCount = 0;
 	maxAge = 3;
@@ -33,7 +33,7 @@ OpticalFlowTracker::OpticalFlowTracker(){
 	dummyVector.age = 0;
 	
 	featureDetector.setMinDistance(minDistance);
-	featureDetector.setThreshold(0.01);
+	featureDetector.setThreshold(0.01f);
 }
 
 OpticalFlowTracker::~OpticalFlowTracker(){
@@ -61,14 +61,15 @@ char OpticalFlowTracker::rebuildImages(){
 			if(previousImage)cvReleaseMat(&previousImage);
 			if(currentPyramid)cvReleaseMat(&currentPyramid);
 			if(previousPyramid)cvReleaseMat(&previousPyramid);
-			strcpy(error,"OpticalFlowTracker::rebuildImages failed");
+
+			strcpy_s(error, 255, "OpticalFlowTracker::rebuildImages failed");
 			return 0;
 		}
 		return 1;
 }
 
 char OpticalFlowTracker::checkImages(){
-	if(!currentImage){strcpy(error,"OpticalFlowTracker::checkImages failed");return 0;}
+	if(!currentImage){strcpy_s(error, 255, "OpticalFlowTracker::checkImages failed");return 0;}
 	if((!previousImage)||(!currentPyramid)||(!previousPyramid))return rebuildImages();
 	if(!CV_ARE_SIZES_EQ(previousImage, currentImage))return rebuildImages();
 	return 1;
@@ -85,19 +86,19 @@ char OpticalFlowTracker::storePreviousImage(){
 }
 
 char OpticalFlowTracker::setImage(CvMat *image){
-	if(!image){strcpy(error,"OpticalFlowTracker::setImage failed");return 0;}
+	if(!image){strcpy_s(error, 255, "OpticalFlowTracker::setImage failed");return 0;}
 	currentImage = image;
 	return checkImages();
 }
 
 char OpticalFlowTracker::trackFeatures(){
 	if((!currentImage)||(!previousImage)||(!currentPyramid)||(!previousPyramid)){
-		strcpy(error,"OpticalFlowTracker::trackFeatures failed");
+		strcpy_s(error, 255, "OpticalFlowTracker::trackFeatures failed");
 		return 0;
 	}
 	if(featureCount < 1)return 1;
 	if((!features)||(!newPositions)||(!status)){
-		strcpy(error,"OpticalFlowTracker::trackFeatures failed");
+		strcpy_s(error, 255, "OpticalFlowTracker::trackFeatures failed");
 		return 0;
 	}
 	
@@ -111,7 +112,7 @@ char OpticalFlowTracker::trackFeatures(){
 
 char OpticalFlowTracker::processFrame(CvMat *image){
 	if(!setImage(image))return 0;
-	if(!featureDetector.findFeatures(previousImage)){strcpy(error, featureDetector.getErrorMess()); return 0;}
+	if(!featureDetector.findFeatures(previousImage)){strcpy_s(error, 255, featureDetector.getErrorMess()); return 0;}
 	if(!updateFeatureList())return 0;
 	if(!trackFeatures())return 0;
 	if(!calculateVectors())return 0;
@@ -123,11 +124,11 @@ char OpticalFlowTracker::updateFeatureList(){
 	unsigned int totalCount = featureCount+featureDetector.getCount();
 	if(totalCount < 1)return 1;
 	CvPoint2D32f* tempFeatures = (CvPoint2D32f*)malloc(sizeof(CvPoint2D32f)*totalCount);
-	if(!tempFeatures){strcpy(error,"OpticalFlowTracker::updateFeatureList failed: tempFeatures"); return 0;}
+	if(!tempFeatures){strcpy_s(error, 255,"OpticalFlowTracker::updateFeatureList failed: tempFeatures"); return 0;}
 	unsigned int* tempIndices = (unsigned int*)malloc(sizeof(unsigned int)*totalCount);
-	if(!tempFeatures){strcpy(error,"OpticalFlowTracker::updateFeatureList failed: tempIndices"); return 0;}
+	if(!tempFeatures){strcpy_s(error, 255,"OpticalFlowTracker::updateFeatureList failed: tempIndices"); return 0;}
 	unsigned int* tempAges = (unsigned int*)malloc(sizeof(unsigned int)*totalCount);
-	if(!tempAges){strcpy(error,"OpticalFlowTracker::updateFeatureList failed: tempAges"); return 0;}
+	if(!tempAges){strcpy_s(error, 255,"OpticalFlowTracker::updateFeatureList failed: tempAges"); return 0;}
 	
 	CvPoint2D32f* f = featureDetector.getFeaturePtr();
 	unsigned int c = featureDetector.getCount();
@@ -135,7 +136,7 @@ char OpticalFlowTracker::updateFeatureList(){
 	//Merge into new list features that were tracked successfully
 	unsigned int i,j, index=0;
 	float dx, dy;
-	float d_thresh = minDistance*(float)currentImage->cols; d_thresh*=(d_thresh*1.5);
+	float d_thresh = minDistance*(float)currentImage->cols; d_thresh*=(d_thresh*1.5f);
 	bool isolated;
 	for(i=0;i<featureCount;i++){
 		if(status[i]){
@@ -195,10 +196,10 @@ char OpticalFlowTracker::updateFeatureList(){
 	featureCount = index;
 	
 	status = (char*)realloc(status, sizeof(char)*featureCount);
-	if(!status){strcpy(error,"OpticalFlowTracker::updateFeatureList failed: status"); return 0;};
+	if(!status){strcpy_s(error, 255,"OpticalFlowTracker::updateFeatureList failed: status"); return 0;};
 	
 	newPositions = (CvPoint2D32f*)realloc(newPositions, sizeof(CvPoint2D32f)*featureCount);
-	if(!newPositions){strcpy(error,"OpticalFlowTracker::updateFeatureList failed: newPositions"); return 0;}
+	if(!newPositions){strcpy_s(error, 255,"OpticalFlowTracker::updateFeatureList failed: newPositions"); return 0;}
 	
 	return 1;
 }
@@ -207,11 +208,11 @@ char OpticalFlowTracker::calculateVectors(){
 	vectorCount = 0;
 	if(featureCount < 1)return 1;
 	if((!features)||(!newPositions)||(!status)||(!ages)||(!indices))
-		{strcpy(error,"OpticalFlowTracker::calculateVectors failed"); return 0;}
-	if(!currentImage){strcpy(error,"OpticalFlowTracker::calculateVectors failed: currentImage"); return 0;}
+		{strcpy_s(error, 255,"OpticalFlowTracker::calculateVectors failed"); return 0;}
+	if(!currentImage){strcpy_s(error, 255,"OpticalFlowTracker::calculateVectors failed: currentImage"); return 0;}
 	if(featureCount < 1)return 1;
 	vectors = (Vector*)realloc(vectors,featureCount*sizeof(Vector));
-	if(!vectors){strcpy(error,"OpticalFlowTracker::calculateVectors failed: vectors"); return 0;}
+	if(!vectors){strcpy_s(error, 255,"OpticalFlowTracker::calculateVectors failed: vectors"); return 0;}
 	
 	unsigned int i,j;
 	float dx, dy;
@@ -242,12 +243,12 @@ char OpticalFlowTracker::calculateVectors(){
 
 char OpticalFlowTracker::findFriends(){
 	if(featureCount<1)return 1;
-	if(!vectors){strcpy(error,"OpticalFlowTracker::findFriends failed: vectors"); return 0;}
-	if(!currentImage){strcpy(error,"OpticalFlowTracker::findFriends failed: currentImage"); return 0;}
+	if(!vectors){strcpy_s(error, 255,"OpticalFlowTracker::findFriends failed: vectors"); return 0;}
+	if(!currentImage){strcpy_s(error, 255,"OpticalFlowTracker::findFriends failed: currentImage"); return 0;}
 	
 	const float d_thresh = 0.03f; //Arbitrary distance threshold. = (1/8)^2 + (1/8)^2
 	//float small_movement = (float)(currentImage.cols + currentImage.rows) / 280.f;
-	const float small_movement = 0.007; //Again arbitrary value (corresponds to ~2 pixels for 320x240 image)
+	const float small_movement = 0.007f; //Again arbitrary value (corresponds to ~2 pixels for 320x240 image)
 	maxFriends = cvFloor((float)vectorCount * 0.015625f);
 	
 	goodVectorCount = 0;

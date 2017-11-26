@@ -22,8 +22,13 @@
 */
 
 
+#include <stddef.h>
+
+#undef error
 #include "jit.common.h"
-#include "cv.h"
+
+#undef error
+#include "opencv.hpp"
 
 #define MAXPOINTS 256
 
@@ -113,8 +118,8 @@ t_jit_err cv_jit_flowfield_init(void)
 		sizeof(t_cv_jit_flowfield),A_CANT,0L); //A_CANT = untyped
 
 	//add mop
-	mop = jit_object_new(_jit_sym_jit_mop,1,1);  //Object has one input and one output
-	output = jit_object_method(mop,_jit_sym_getoutput,1); //Get a pointer to the output matrix
+	mop = (t_jit_object *)jit_object_new(_jit_sym_jit_mop,1,1);  //Object has one input and one output
+	output = (t_jit_object *)jit_object_method(mop,_jit_sym_getoutput,1); //Get a pointer to the output matrix
 
    	jit_mop_single_type(mop,_jit_sym_char);   //Set input type and planecount
    	jit_mop_single_planecount(mop,1);  
@@ -137,31 +142,31 @@ t_jit_err cv_jit_flowfield_init(void)
 	attrflags = JIT_ATTR_GET_DEFER_LOW | JIT_ATTR_SET_USURP_LOW;
 	
 	//threshold for feature detection
-	attr = jit_object_new(	_jit_sym_jit_attr_offset,"threshold",_jit_sym_float32,attrflags,(method)0L,(method)0L,calcoffset(t_cv_jit_flowfield,threshold));			
+	attr = (t_jit_object *)jit_object_new(	_jit_sym_jit_attr_offset,"threshold",_jit_sym_float32,attrflags,(method)0L,(method)0L,calcoffset(t_cv_jit_flowfield,threshold));
 	jit_attr_addfilterset_clip(attr,0.001,1,TRUE,TRUE);	//clip to 0.001-1
 	jit_class_addattr(_cv_jit_flowfield_class, attr);
 	
 	//minimum distance between two features
-	attr = jit_object_new(	_jit_sym_jit_attr_offset,"distance",_jit_sym_float32,attrflags,(method)0L,(method)0L,calcoffset(t_cv_jit_flowfield,distance));			
+	attr = (t_jit_object *)jit_object_new(	_jit_sym_jit_attr_offset,"distance",_jit_sym_float32,attrflags,(method)0L,(method)0L,calcoffset(t_cv_jit_flowfield,distance));
 	jit_class_addattr(_cv_jit_flowfield_class, attr);
 
 	//Maximum number of features
-	attr = jit_object_new(	_jit_sym_jit_attr_offset,"npoints",_jit_sym_long,attrflags,(method)0L,(method)0L,calcoffset(t_cv_jit_flowfield,npoints));			
+	attr = (t_jit_object *)jit_object_new(	_jit_sym_jit_attr_offset,"npoints",_jit_sym_long,attrflags,(method)0L,(method)0L,calcoffset(t_cv_jit_flowfield,npoints));
 	jit_attr_addfilterset_clip(attr,1,MAXPOINTS,TRUE,TRUE);	//clip to 1 - MAXPOINTS
 	jit_class_addattr(_cv_jit_flowfield_class, attr);
 
 	//Radius of optical flow window
-	attr = jit_object_new(	_jit_sym_jit_attr_offset,"radius",_jit_sym_long,attrflags,(method)0L,(method)0L,calcoffset(t_cv_jit_flowfield,radius));			
+	attr = (t_jit_object *)jit_object_new(	_jit_sym_jit_attr_offset,"radius",_jit_sym_long,attrflags,(method)0L,(method)0L,calcoffset(t_cv_jit_flowfield,radius));
 	jit_attr_addfilterset_clip(attr,1,10,TRUE,TRUE);
 	jit_class_addattr(_cv_jit_flowfield_class, attr);
 
 	//Threshold for motion detection
-	attr = jit_object_new(	_jit_sym_jit_attr_offset,"motionthresh",_jit_sym_long,attrflags,(method)0L,(method)0L,calcoffset(t_cv_jit_flowfield,motionthresh));			
+	attr = (t_jit_object *)jit_object_new(	_jit_sym_jit_attr_offset,"motionthresh",_jit_sym_long,attrflags,(method)0L,(method)0L,calcoffset(t_cv_jit_flowfield,motionthresh));
 	jit_attr_addfilterset_clip(attr,0,255,TRUE,TRUE); //clip to 0 - 255
 	jit_class_addattr(_cv_jit_flowfield_class, attr);
 
 	//Threshold for motion detection
-	attr = jit_object_new(	_jit_sym_jit_attr_offset,"mode",_jit_sym_long,attrflags,(method)0L,(method)0L,calcoffset(t_cv_jit_flowfield,mode));			
+	attr = (t_jit_object *)jit_object_new(	_jit_sym_jit_attr_offset,"mode",_jit_sym_long,attrflags,(method)0L,(method)0L,calcoffset(t_cv_jit_flowfield,mode));
 	jit_attr_addfilterset_clip(attr,0,1,TRUE,TRUE); //clip to 0 - 1
 	jit_class_addattr(_cv_jit_flowfield_class, attr);
 	

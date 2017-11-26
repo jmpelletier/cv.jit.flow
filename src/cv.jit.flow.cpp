@@ -21,11 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef __cplusplus
 extern "C" {
 #endif
+#undef error
 #include "jit.common.h"
 #ifdef __cplusplus 
 } //extern "C"
 #endif
-#include "cv.h"
+
+#undef error
+#include "opencv.hpp"
 #include "jitOpenCV.h"
 #include "OpticalFlowTracker.h"
 
@@ -127,8 +130,9 @@ t_jit_err cv_jit_flow_matrix_calc(t_cv_jit_flow *x, void *inputs, void *outputs)
 	if (x&&in_matrix&&out_matrix) 
 	{
 		//Lock the matrices
-		in_savelock = (long) jit_object_method(in_matrix,_jit_sym_lock,1);
-		out_savelock = (long) jit_object_method(out_matrix,_jit_sym_lock,1);
+		
+		in_savelock = reinterpret_cast<long>(jit_object_method(in_matrix,_jit_sym_lock,1));
+		out_savelock = reinterpret_cast<long>(jit_object_method(out_matrix,_jit_sym_lock,1));
 		
 		//Make sure input is of proper format
 		jit_object_method(in_matrix,_jit_sym_getinfo,&in_minfo);
@@ -272,9 +276,9 @@ t_cv_jit_flow *cv_jit_flow_new(void)
 			
 	if ((x=(t_cv_jit_flow *)jit_object_alloc(_cv_jit_flow_class))) {
 	
-		x->threshold = 0.01;
+		x->threshold = 0.01f;
 		x->radius = 7;
-		x->min_distance = 0.01;
+		x->min_distance = 0.01f;
 		//x->dims[0] = x->dims[1] = 0;
 		//x->count = 0;
 	} else {

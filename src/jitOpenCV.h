@@ -19,13 +19,13 @@
 
 */
 
-#include <cv.h>
+#undef error
+#include "opencv.hpp"
+
+#undef error
 #include <jit.common.h>
 
 CvMat jitMatrix2CvMat(void *jitMatrix);
-void* cvMat2jitMatrix(CvMat *cvMatrix);
-
-
 
 CvMat jitMatrix2CvMat(void *jitMatrix)
 {

@@ -3,8 +3,7 @@
 
 #include "FeatureDetector.h"
 
-#include "cv.h"
-//#include <deque>
+#include "opencv.hpp"
 #include <vector>
 
 using namespace std;
@@ -81,13 +80,18 @@ class OpticalFlowTracker{
 		void setPyramidLevels(unsigned int l){pyramidLevels = l;}
 		unsigned int getPyramidLevels(){return pyramidLevels;}
 		
-		void setWindowSize(unsigned int s){windowSize = s > 0 ? cvSize(s,s) : cvSize(1,1);}
+		void setWindowSize(unsigned int s){
+			windowSize = s > 0 ? cvSize(s,s) : cvSize(1,1);
+		}
 		unsigned int getWindowSize(){return windowSize.width;}
 		
 		void setFeatureDetector(int d){featureDetector.setAlgorithm(d);}
 		int getFeatureDetector(){return featureDetector.getAlgorithm();}
 		
-		void setMinDistance(float d){minDistance = d < 0.f ? 0.f : (d > 1.f ? 1. : d); featureDetector.setMinDistance(d);}
+		void setMinDistance(float d){
+			minDistance = d < 0.f ? 0.f : (d > 1.f ? 1.f : d); 
+			featureDetector.setMinDistance(d);
+		}
 		float getMinDistance(){return minDistance;}
 		
 		void setDetectorThreshold(float t){featureDetector.setThreshold(t);}

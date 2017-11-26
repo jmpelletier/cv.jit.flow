@@ -16,6 +16,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

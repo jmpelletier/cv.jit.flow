@@ -1,7 +1,7 @@
 #ifndef _FEATUREDETECTOR_H
 #define _FEATUREDETECTOR_H
 
-#include "cv.h"
+#include "opencv.hpp"
 
 #define FEATURE_ALGO_EIGENVALS 0
 #define FEATURE_ALGO_FAST 1
@@ -32,8 +32,8 @@ class FeatureDetector{
 			tempImage = 0;
 			eigImage = 0;
 			algorithm = FEATURE_ALGO_EIGENVALS;
-			minDistance = 0.01;
-			threshold = 0.1;
+			minDistance = 0.01f;
+			threshold = 0.1f;
 			features = NULL;
 			previousFeatures = NULL;
 		}
