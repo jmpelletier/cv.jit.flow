@@ -197,55 +197,7 @@ t_jit_err cv_jit_flow_matrix_calc(t_cv_jit_flow *x, void *inputs, void *outputs)
 				
 				out_data += 7;
 			}
-		}
-				
-		/*result = x->tracker.updateFeatureList();
-		if (!result)post("Error: %s", x->tracker.getError());
-		 result = x->tracker.trackFeatures(&image);
-		if (!result)post("Error: %s", x->tracker.getError());
-					
-		out_minfo.dim[0] = x->tracker.getGoodVectorCount();
-		//out_minfo.dim[0] = x->tracker.getTrackedFeatureCount(); //debug
-		jit_object_method(out_matrix,_jit_sym_setinfo,&out_minfo);
-		jit_object_method(out_matrix,_jit_sym_getinfo,&out_minfo);
-		
-		jit_object_method(out_matrix,_jit_sym_getdata,&out_bp);
-		if (!out_bp) { err=JIT_ERR_INVALID_OUTPUT; goto out;}
-		
-		out_data = (float *)out_bp;
-		*/
-		
-		/*for(i=0;i<x->tracker.getTrackedFeatureCount();i++){
-			f=x->tracker.getFeature(i);
-			out_data[0] = f->x;
-			out_data[1] = f->y;
-			f=x->tracker.getTrackedFeature(i);
-			out_data[2] = f->x;
-			out_data[3] = f->y;
-			out_data[4] = 3;
-			out_data[5] = 0.5;
-			
-			out_data += 6;
-		}*/
-				
-		/*for(i=0,j=0;i<x->tracker.getTrackedFeatureCount()&&j<out_minfo.dim[0];i++){
-			if(x->tracker.isVectorInlier(i)){
-				v = x->tracker.getVector(i);
-				out_data[0] = v->x;
-				out_data[1] = v->y;
-				out_data[2] = v->x2;
-				out_data[3] = v->y2;
-				out_data[4] = v->alpha;
-				out_data[5] = v->theta;
-				
-				out_data += 6;
-				j++;
-			}
-		}
-		
-		result = x->tracker.findFeatures(&image);
-		if (!result)post("Error: %s", x->tracker.getError());
-		*/
+		}				
 	}
 
 	
@@ -259,15 +211,7 @@ void cv_jit_flow_calculate(t_cv_jit_flow *x, long dimcount, long *dim, long plan
 {
 	CvMat image;
 	
-	/*image.type = CV_8UC1;
-	image.step = in_minfo->dimstride[1];
-	image.data.ptr = bip;
-	image.rows = dim[1];
-	image.cols = dim[0];*/
-	
 	cvInitMatHeader(&image, dim[1], dim[0], CV_MAKETYPE(CV_8U,planecount), bip, in_minfo->dimstride[1]);
-		
-	
 }
 
 t_cv_jit_flow *cv_jit_flow_new(void)
@@ -279,8 +223,6 @@ t_cv_jit_flow *cv_jit_flow_new(void)
 		x->threshold = 0.01f;
 		x->radius = 7;
 		x->min_distance = 0.01f;
-		//x->dims[0] = x->dims[1] = 0;
-		//x->count = 0;
 	} else {
 		x = NULL;
 	}	
